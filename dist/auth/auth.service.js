@@ -21,7 +21,10 @@ let AuthService = class AuthService {
         this.userService = userService;
         this.jwtService = jwtService;
     }
-    async login(userDTO) { }
+    async login(userDTO) {
+        const user = await this.validateUser(userDTO);
+        return this.generateToken(user);
+    }
     async registration(userDTO) {
         const candidate = await this.userService.getUserByLogin(userDTO.login);
         if (candidate) {
@@ -35,12 +38,34 @@ let AuthService = class AuthService {
         return this.generateToken(user);
     }
     async generateToken(user) {
-        console.log("User object:", user);
-        console.log("User login:", user.dataValues.login);
         const payload = { id: user.id, login: user.dataValues.login };
         return {
             token: this.jwtService.sign(payload),
         };
+    }
+    async validateUser(userDTO) {
+        const user = await this.userService.getUserByLogin(userDTO.login);
+        if (!user) {
+            console.warn(`Пользователь с логином ${userDTO.login} не найден`);
+            throw new common_1.UnauthorizedException({
+                message: "Некорректный login или пароль",
+            });
+        }
+        if (!user.dataValues.password) {
+            console.warn(`У пользователя ${userDTO.login} отсутствует пароль`);
+            console.log(user, "full user:");
+            throw new common_1.UnauthorizedException({
+                message: "Некорректный login или пароль",
+            });
+        }
+        const passwordEquals = await bcrypt.compare(userDTO.password, user.dataValues.password);
+        if (!passwordEquals) {
+            console.warn(`Неверный пароль для пользователя ${userDTO.login}`);
+            throw new common_1.UnauthorizedException({
+                message: "Некорректный login или пароль",
+            });
+        }
+        return user;
     }
 };
 exports.AuthService = AuthService;
