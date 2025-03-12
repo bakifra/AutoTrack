@@ -1,7 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { InjectModel } from "@nestjs/sequelize";
-import { RolesService } from "src/roles/roles.service";
 import { CreateUserDto } from "src/users/dto/create-user.dto";
 import { User } from "src/users/users.model";
 import { UsersService } from "src/users/users.service";
@@ -14,7 +17,10 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async login(userDTO: CreateUserDto) {}
+  async login(userDTO: CreateUserDto) {
+    const user = await this.validateUser(userDTO);
+    return this.generateToken(user);
+  }
 
   async registration(userDTO: CreateUserDto) {
     const candidate = await this.userService.getUserByLogin(userDTO.login);
@@ -32,10 +38,42 @@ export class AuthService {
     return this.generateToken(user);
   }
 
-  async generateToken(user: User) {
+  private async generateToken(user: User) {
     const payload = { id: user.id, login: user.dataValues.login };
     return {
       token: this.jwtService.sign(payload),
     };
+  }
+
+  private async validateUser(userDTO: CreateUserDto) {
+    const user = await this.userService.getUserByLogin(userDTO.login);
+
+    if (!user) {
+      // console.warn(`Пользователь с логином ${userDTO.login} не найден`);
+      throw new UnauthorizedException({
+        message: "Некорректный login или пароль",
+      });
+    }
+
+    if (!user.dataValues.password) {
+      // console.warn(`У пользователя ${userDTO.login} отсутствует пароль`);
+      throw new UnauthorizedException({
+        message: "Некорректный login или пароль",
+      });
+    }
+
+    const passwordEquals = await bcrypt.compare(
+      userDTO.password,
+      user.dataValues.password
+    );
+
+    if (!passwordEquals) {
+      // console.warn(`Неверный пароль для пользователя ${userDTO.login}`);
+      throw new UnauthorizedException({
+        message: "Некорректный login или пароль",
+      });
+    }
+
+    return user;
   }
 }
