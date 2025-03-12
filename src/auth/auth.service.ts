@@ -18,7 +18,10 @@ export class AuthService {
   ) {}
 
   async login(userDTO: CreateUserDto) {
+    console.log("LOGIN...");
     const user = await this.validateUser(userDTO);
+    console.log("LOGINED user", user);
+    console.log("TOKEN", this.generateToken(user));
     return this.generateToken(user);
   }
 
@@ -49,14 +52,14 @@ export class AuthService {
     const user = await this.userService.getUserByLogin(userDTO.login);
 
     if (!user) {
-      // console.warn(`Пользователь с логином ${userDTO.login} не найден`);
+      console.warn(`Пользователь с логином ${userDTO.login} не найден`);
       throw new UnauthorizedException({
         message: "Некорректный login или пароль",
       });
     }
 
     if (!user.dataValues.password) {
-      // console.warn(`У пользователя ${userDTO.login} отсутствует пароль`);
+      console.warn(`У пользователя ${userDTO.login} отсутствует пароль`);
       throw new UnauthorizedException({
         message: "Некорректный login или пароль",
       });
@@ -68,12 +71,12 @@ export class AuthService {
     );
 
     if (!passwordEquals) {
-      // console.warn(`Неверный пароль для пользователя ${userDTO.login}`);
+      console.warn(`Неверный пароль для пользователя ${userDTO.login}`);
       throw new UnauthorizedException({
         message: "Некорректный login или пароль",
       });
     }
-
+    console.warn(`OK! ${userDTO.login}`);
     return user;
   }
 }

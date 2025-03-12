@@ -22,7 +22,10 @@ let AuthService = class AuthService {
         this.jwtService = jwtService;
     }
     async login(userDTO) {
+        console.log("LOGIN...");
         const user = await this.validateUser(userDTO);
+        console.log("LOGINED user", user);
+        console.log("TOKEN", this.generateToken(user));
         return this.generateToken(user);
     }
     async registration(userDTO) {
@@ -53,7 +56,6 @@ let AuthService = class AuthService {
         }
         if (!user.dataValues.password) {
             console.warn(`У пользователя ${userDTO.login} отсутствует пароль`);
-            console.log(user, "full user:");
             throw new common_1.UnauthorizedException({
                 message: "Некорректный login или пароль",
             });
@@ -65,6 +67,7 @@ let AuthService = class AuthService {
                 message: "Некорректный login или пароль",
             });
         }
+        console.warn(`OK! ${userDTO.login}`);
         return user;
     }
 };
