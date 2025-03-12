@@ -48,7 +48,7 @@ __decorate([
     __metadata("design:type", Number)
 ], User.prototype, "role", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: true, description: "Был ли пользователь удалён" }),
+    (0, swagger_1.ApiProperty)({ example: true, description: "Активный аккаунт" }),
     (0, sequelize_typescript_1.Column)({ type: sequelize_typescript_1.DataType.BOOLEAN, defaultValue: true }),
     __metadata("design:type", Boolean)
 ], User.prototype, "active", void 0);

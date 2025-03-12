@@ -9,27 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateUserDto = void 0;
+exports.CreateRoleDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
-class CreateUserDto {
-    login;
-    password;
-    role;
+class CreateRoleDto {
+    role_name;
 }
-exports.CreateUserDto = CreateUserDto;
+exports.CreateRoleDto = CreateRoleDto;
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: "user@mail.ru",
-        description: "Уникальный login пользователя",
+        example: "Диспетчер",
+        description: "Роль пользователя",
     }),
     __metadata("design:type", String)
-], CreateUserDto.prototype, "login", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: "1234567", description: "Пароль для пользователя" }),
-    __metadata("design:type", String)
-], CreateUserDto.prototype, "password", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: "1", description: "id роли пользователя" }),
-    __metadata("design:type", Number)
-], CreateUserDto.prototype, "role", void 0);
-//# sourceMappingURL=create-user.dto.js.map
+], CreateRoleDto.prototype, "role_name", void 0);
+//# sourceMappingURL=create-role.dto.js.map

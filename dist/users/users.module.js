@@ -12,6 +12,8 @@ const users_controller_1 = require("./users.controller");
 const users_service_1 = require("./users.service");
 const sequelize_1 = require("@nestjs/sequelize");
 const users_model_1 = require("./users.model");
+const roles_model_1 = require("../roles/roles.model");
+const roles_module_1 = require("../roles/roles.module");
 let UsersModule = class UsersModule {
 };
 exports.UsersModule = UsersModule;
@@ -19,7 +21,8 @@ exports.UsersModule = UsersModule = __decorate([
     (0, common_1.Module)({
         controllers: [users_controller_1.UsersController],
         providers: [users_service_1.UsersService],
-        imports: [sequelize_1.SequelizeModule.forFeature([users_model_1.User])],
+        imports: [sequelize_1.SequelizeModule.forFeature([users_model_1.User, roles_model_1.Role]), roles_module_1.RolesModule],
+        exports: [users_service_1.UsersService],
     })
 ], UsersModule);
 //# sourceMappingURL=users.module.js.map
