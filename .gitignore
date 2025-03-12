@@ -1,1 +1,5 @@
 node_modules
+*.tsbuildinfo
+*.map
+/dist
+dist/tsconfig.build.tsbuildinfo
