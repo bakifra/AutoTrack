@@ -32,7 +32,7 @@ export class User extends Model<User, UserCreationAttrs> {
   @Column({ type: DataType.SMALLINT })
   role: number;
 
-  @ApiProperty({ example: true, description: "Был ли пользователь удалён" })
+  @ApiProperty({ example: true, description: "Активный аккаунт" })
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   active: boolean;
 }
